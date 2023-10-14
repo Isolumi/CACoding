@@ -1,5 +1,6 @@
 package interface_adapter.signup;
 
+import interface_adapter.clear_users.ClearViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.ViewManagerModel;
@@ -13,14 +14,17 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
+    private final ClearViewModel clearViewModel;
     private ViewManagerModel viewManagerModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
                            SignupViewModel signupViewModel,
-                           LoginViewModel loginViewModel) {
+                           LoginViewModel loginViewModel,
+                            ClearViewModel clearViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
         this.loginViewModel = loginViewModel;
+        this.clearViewModel = clearViewModel;
     }
 
     @Override
@@ -43,5 +47,12 @@ public class SignupPresenter implements SignupOutputBoundary {
         SignupState signupState = signupViewModel.getState();
         signupState.setUsernameError(error);
         signupViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareClearView() {
+        clearViewModel.firePropertyChanged();
+        viewManagerModel.setActiveView(clearViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 }
